@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>趣味魔法阅读 - 纯净识字版</title>
+    <title>趣味魔法阅读 Reading is FUN</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Pinyin Pro -->
@@ -108,10 +108,8 @@
         #cropper-container {
             width: 100%; height: 60vh; background: #000; margin-bottom: 20px;
         }
-        /* Make cropper image responsive */
         #cropper-img { max-width: 100%; display: block; }
 
-        /* Game Elements */
         .puzzle-slot{width:3.5rem;height:3.5rem;border-bottom:4px dashed #cbd5e1;margin:0.5rem;display:inline-flex;align-items:center;justify-content:center}
         .puzzle-piece{position:relative;background-color:#fff;border:2px solid #f97316;border-radius:12px;padding:.5rem 1rem;font-size:2rem;color:#4b5563;box-shadow:0 4px 0 #ea580c;cursor:pointer;margin:.5rem;display:inline-block;transition:all .2s;font-family:"KaiTi",serif;min-width:3.5rem}
         .puzzle-piece:active{transform:translateY(4px);box-shadow:0 0 0 #ea580c}.puzzle-piece.used{opacity:.4;transform:scale(.9);pointer-events:none;box-shadow:none;background-color:#e5e7eb;border-color:#d1d5db}
@@ -126,14 +124,24 @@
         .cloud-char.spotlight-active .cloud-text{color:#d97706;text-shadow:0 0 2px #fff;font-weight:bold}.cloud-char.spotlight-done{opacity:0;transform:scale(0) rotate(180deg);pointer-events:none;transition:all .6s ease-out}
         .rhythm-ball{position:absolute;width:24px;height:24px;background:#ef4444;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,.3);z-index:100;pointer-events:none;display:none;transition:left linear}
         .ball-jumping{animation-name:ball-jump-arc;animation-timing-function:cubic-bezier(.45,.05,.55,.95);animation-iteration-count:1}.hanzi.rhythm-hit{color:#d97706!important;text-shadow:0 0 5px #fcd34d;transform:scale(1.1)}
-        #action-overlay{position:absolute;inset:0;background:rgba(255,255,255,.95);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200}
-        #action-overlay.active{display:flex!important;animation:popIn .3s cubic-bezier(.175,.885,.32,1.275)}
-        .emoji-item{cursor:pointer;transition:transform .2s;font-family:"Segoe UI Emoji",sans-serif}.emoji-item:hover{transform:scale(1.2) rotate(10deg)}
-        @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
-        @keyframes ball-jump-arc{0%{transform:translateY(0) scaleX(1.1) scaleY(.9)}10%{transform:translateY(0) scaleX(1) scaleY(1)}50%{transform:translateY(-35px)}90%{transform:translateY(0) scaleX(1) scaleY(1)}100%{transform:translateY(0) scaleX(1.1) scaleY(.9)}}
+        
+        /* 🤸 动感课间遮罩 (FIXED: position fixed to viewport) */
+        #action-overlay {
+            position: fixed; /* 关键修改：固定定位 */
+            inset: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: none; 
+            flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; /* 最高层级 */
+        }
+        #action-overlay.active {
+            display: flex !important;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         @keyframes popIn{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
         @keyframes pulse-glow { 0% { transform: scale(1.2); filter: drop-shadow(0 0 10px #facc15) drop-shadow(0 0 20px #fbbf24); } 100% { transform: scale(1.35); filter: drop-shadow(0 0 25px #facc15) drop-shadow(0 0 50px #f59e0b); } }
+        @keyframes ball-jump-arc{0%{transform:translateY(0) scaleX(1.1) scaleY(.9)}10%{transform:translateY(0) scaleX(1) scaleY(1)}50%{transform:translateY(-35px)}90%{transform:translateY(0) scaleX(1) scaleY(1)}100%{transform:translateY(0) scaleX(1.1) scaleY(.9)}}
         .action-icon{font-size:8rem;margin-bottom:2rem;animation:bounce 1s infinite}.action-text{font-size:4rem;font-family:'ZCOOL KuaiLe',cursive;color:#ea580c;text-shadow:2px 2px 0 #fff}
     </style>
 </head>
@@ -174,7 +182,7 @@
 大大的眼睛。</textarea>
                 
                 <!-- OCR Loader -->
-                <div id="ocr-loader" class="hidden absolute inset-0 bg-white/95 rounded-xl flex-col items-center justify-center z-50">
+                <div id="ocr-loader" class="hidden absolute inset-0 bg-white/90 rounded-xl flex-col items-center justify-center z-50">
                     <i class="fa-solid fa-spinner fa-spin text-5xl text-sky-500 mb-4"></i>
                     <p class="text-sky-600 font-bold text-xl cartoon-font mt-4" id="ocr-status">正在启动识字引擎...</p>
                     <p class="text-gray-500 text-sm mt-2">正在进行图像去噪与增强...</p>
@@ -230,8 +238,13 @@
             <div id="game-container-wrapper" class="relative bg-white border border-gray-300 rounded-b-xl min-h-[450px] shadow-inner overflow-hidden">
                 <div id="game-board" class="w-full h-full min-h-[450px] relative"></div>
                 <div id="rhythm-ball" class="rhythm-ball"></div>
-                <div id="action-overlay" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center pointer-events-none"><div id="action-icon" class="text-8xl mb-4 animate-bounce">👏</div><div id="action-text" class="text-5xl font-bold text-orange-500 cartoon-font">拍拍手</div></div>
                 <div id="rain-target-bar" class="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 target-panel flex flex-col items-center justify-center py-2 px-6 transition-all duration-300"><div class="text-xs text-indigo-200 uppercase tracking-wider font-bold">请点击:</div><div id="target-pinyin" class="text-3xl font-bold font-mono tracking-widest text-yellow-300">huā</div></div>
+            </div>
+            
+            <!-- FIXED: Moved Action Overlay OUT of wrapper to ensure fixed positioning works and it's not clipped -->
+            <div id="action-overlay" class="hidden fixed inset-0 bg-white/95 z-[9999] flex flex-col items-center justify-center">
+                <div id="action-icon" class="text-8xl mb-4 animate-bounce">👏</div>
+                <div id="action-text" class="text-5xl font-bold text-orange-500 cartoon-font">拍拍手</div>
             </div>
         </section>
     </main>
@@ -370,7 +383,11 @@
             document.getElementById('step-input').classList.add('hidden');
             document.getElementById('step-mode').classList.add('hidden');
             document.getElementById('game-area').classList.remove('hidden');
-            const overlay = document.getElementById('action-overlay'); overlay.classList.remove('active'); overlay.style.display = 'none';
+            
+            // Fixed: Force hide overlay logic
+            const overlay = document.getElementById('action-overlay');
+            overlay.classList.remove('active');
+            // No direct style manip here, rely on class toggle logic below or css
 
             const controls = ['controls-vanishing', 'controls-emoji', 'controls-puzzle', 'controls-rain', 'controls-spotlight', 'controls-rhythm', 'controls-rhythm-extra', 'controls-rain-extra', 'controls-touch', 'btn-go', 'btn-refresh', 'btn-next-puzzle', 'btn-pinyin', 'btn-spotlight-skip', 'btn-print', 'btn-download', 'btn-word', 'rain-target-bar'];
             controls.forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('hidden'); });
@@ -415,6 +432,7 @@
                     const py = /[\u4e00-\u9fa5]/.test(char) ? pinyin(char) : '';
                     const unit = document.createElement('div'); unit.className = 'char-unit';
                     unit.innerHTML = `<div class="pinyin" style="visibility:hidden">${py}</div><div class="hanzi game-font">${char}</div>`;
+                    
                     unit.onclick = () => {
                         document.querySelectorAll('.touch-active').forEach(el => el.classList.remove('touch-active'));
                         unit.classList.add('touch-active');
@@ -437,7 +455,11 @@
             document.getElementById('game-area').classList.add('hidden');
             document.getElementById('step-input').classList.remove('hidden');
             document.getElementById('step-mode').classList.remove('hidden');
-            const overlay = document.getElementById('action-overlay'); overlay.classList.remove('active'); overlay.style.display = 'none';
+            
+            // Force hide action overlay properly
+            const overlay = document.getElementById('action-overlay');
+            overlay.classList.remove('active');
+
             const btn = document.getElementById('btn-go'); if(btn) { btn.innerHTML = '<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); }
         }
 
@@ -457,6 +479,8 @@
             else if (currentMode === 'rain') rainSpeed = v;
             else if (currentMode === 'rhythm') rhythmBPM = 30 + (v - 1) * 20;
         }
+        function updateRainSpeed(val) { rainSpeed = parseInt(val); }
+        function updateRhythmSpeed(val) { rhythmBPM = 30 + (parseInt(val) - 1) * 20; }
 
         // --- SEN ---
         function toggleZenMode() { document.body.classList.toggle('zen-mode'); const btn = document.getElementById('btn-zen'); if(document.body.classList.contains('zen-mode')) { btn.classList.add('bg-gray-800','text-white'); btn.classList.remove('bg-white/50','text-gray-400'); } else { btn.classList.remove('bg-gray-800','text-white'); btn.classList.add('bg-white/50','text-gray-400'); } }
@@ -559,18 +583,119 @@
         function handleSpotlightClick(el) { if (el === currentSpotlightTarget) { el.classList.remove('spotlight-active'); el.classList.add('spotlight-done'); setTimeout(nextSpotlightTarget, 500); } }
 
         // --- Rhythm ---
-        function renderRhythmSetup(text) { const board = document.getElementById('game-board'); board.innerHTML = ''; board.className = 'notebook-paper p-6 flex flex-wrap justify-center content-start gap-y-4 w-full h-full'; const { pinyin } = pinyinPro; const lines = text.split('\n'); lines.forEach((line, lineIdx) => { const div = document.createElement('div'); div.className = 'w-full text-center mb-10 leading-none flex flex-wrap justify-center rhythm-line'; line.split('').forEach(char => { const py = /[\u4e00-\u9fa5]/.test(char) ? pinyin(char) : ''; const unit = document.createElement('div'); unit.className = 'char-unit rhythm-target'; unit.dataset.line = lineIdx; unit.innerHTML = `<div class="pinyin" style="visibility:${pinyinVisible?'visible':'hidden'}">${py}</div><div class="hanzi game-font">${char}</div>`; div.appendChild(unit); }); board.appendChild(div); }); document.getElementById('rhythm-ball').style.display = 'none'; }
+        function renderRhythmSetup(text) { 
+            const board = document.getElementById('game-board'); board.innerHTML = ''; 
+            board.className = 'notebook-paper p-6 flex flex-wrap justify-center content-start gap-y-4 w-full h-full'; 
+            const { pinyin } = pinyinPro; 
+            const lines = text.split('\n'); 
+            lines.forEach((line, lineIdx) => { 
+                const div = document.createElement('div'); 
+                div.className = 'w-full text-center mb-10 leading-none flex flex-wrap justify-center rhythm-line'; 
+                line.split('').forEach(char => { 
+                    const py = /[\u4e00-\u9fa5]/.test(char) ? pinyin(char) : ''; 
+                    const unit = document.createElement('div'); unit.className = 'char-unit rhythm-target'; 
+                    unit.dataset.line = lineIdx; 
+                    unit.innerHTML = `<div class="pinyin" style="visibility:${pinyinVisible?'visible':'hidden'}">${py}</div><div class="hanzi game-font">${char}</div>`; 
+                    div.appendChild(unit); 
+                }); 
+                board.appendChild(div); 
+            }); 
+            document.getElementById('rhythm-ball').style.display = 'none'; 
+        }
+
         function toggleRhythmGame() { const btn = document.getElementById('btn-go'); if(isRunning) { stopRhythmGame(); btn.innerHTML='<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } else { startRhythmGame(); btn.innerHTML='<i class="fa-solid fa-stop"></i> 停止'; btn.classList.replace('bg-green-500', 'bg-red-500'); } }
-        function startRhythmGame() { isRunning = true; rhythmIndex = 0; rhythmCurrentLine = 0; if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if(audioCtx.state === 'suspended') audioCtx.resume(); const ball = document.getElementById('rhythm-ball'); ball.style.display = 'block'; const targets = document.querySelectorAll('.rhythm-target .hanzi'); if(targets.length === 0) return; rhythmLoop(); }
-        function rhythmLoop() { if(!isRunning) return; const targets = document.querySelectorAll('.rhythm-target .hanzi'); if(rhythmIndex >= targets.length) { stopRhythmGame(); return; } const target = targets[rhythmIndex]; const parentUnit = target.parentElement; const targetLine = parseInt(parentUnit.dataset.line); if(actionBreakEnabled && rhythmIndex > 0 && targetLine > rhythmCurrentLine) { rhythmCurrentLine = targetLine; triggerActionBreak(); return; } if (!actionBreakEnabled) rhythmCurrentLine = targetLine; const rect = target.getBoundingClientRect(); const boardRect = document.getElementById('game-board').getBoundingClientRect(); const targetX = rect.left - boardRect.left + rect.width/2 - 12; const targetY = rect.top - boardRect.top - 60; const intervalMs = 60000 / rhythmBPM; const ball = document.getElementById('rhythm-ball'); ball.style.left = `${targetX}px`; ball.style.top = `${targetY}px`; ball.classList.remove('ball-jumping'); void ball.offsetWidth; ball.style.animationDuration = `${intervalMs/1000}s`; ball.classList.add('ball-jumping'); playRhythmSound(); targets.forEach(t => t.classList.remove('rhythm-hit')); target.classList.add('rhythm-hit'); rhythmIndex++; rhythmTimer = setTimeout(rhythmLoop, intervalMs); }
-        function triggerActionBreak() { clearTimeout(rhythmTimer); const overlay = document.getElementById('action-overlay'); const iconEl = document.getElementById('action-icon'); const textEl = document.getElementById('action-text'); const actions = [{ i: '👏', t: '拍拍手' }, { i: '🦶', t: '跺跺脚' }, { i: '🙋', t: '举起手' }, { i: '💃', t: '扭扭腰' }, { i: '🤫', t: '嘘~安静' }, { i: '🐸', t: '跳一跳' }]; const act = actions[Math.floor(Math.random() * actions.length)]; iconEl.textContent = act.i; textEl.textContent = act.t; overlay.classList.add('active'); setTimeout(() => { if(!isRunning) { overlay.classList.remove('active'); return; } overlay.classList.remove('active'); rhythmLoop(); }, 3000); }
-        function stopRhythmGame() { isRunning = false; clearTimeout(rhythmTimer); document.getElementById('rhythm-ball').style.display = 'none'; const overlay = document.getElementById('action-overlay'); overlay.classList.remove('active'); document.querySelectorAll('.rhythm-hit').forEach(t => t.classList.remove('rhythm-hit')); const btn = document.getElementById('btn-go'); if(btn) { btn.innerHTML = '<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } }
+        
+        function startRhythmGame() { 
+            isRunning = true; rhythmIndex = 0; rhythmCurrentLine = 0; 
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
+            if(audioCtx.state === 'suspended') audioCtx.resume(); 
+            const ball = document.getElementById('rhythm-ball'); ball.style.display = 'block'; 
+            const targets = document.querySelectorAll('.rhythm-target .hanzi'); 
+            if(targets.length === 0) return; 
+            rhythmLoop(); 
+        }
+
+        function rhythmLoop() { 
+            if(!isRunning) return; 
+            const targets = document.querySelectorAll('.rhythm-target .hanzi'); 
+            if(rhythmIndex >= targets.length) { stopRhythmGame(); return; } 
+            
+            const target = targets[rhythmIndex]; 
+            const parentUnit = target.parentElement; 
+            const targetLine = parseInt(parentUnit.dataset.line); 
+            
+            if(actionBreakEnabled && rhythmIndex > 0 && targetLine > rhythmCurrentLine) { 
+                rhythmCurrentLine = targetLine; 
+                triggerActionBreak(); 
+                return; 
+            } 
+            if (!actionBreakEnabled) rhythmCurrentLine = targetLine; 
+            
+            // --- SCROLL LOGIC ---
+            target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            // --------------------
+
+            const rect = target.getBoundingClientRect(); 
+            const boardRect = document.getElementById('game-board').getBoundingClientRect(); 
+            const targetX = rect.left - boardRect.left + rect.width/2 - 12; 
+            const targetY = rect.top - boardRect.top - 60; 
+            const intervalMs = 60000 / rhythmBPM; 
+            
+            const ball = document.getElementById('rhythm-ball'); 
+            ball.style.left = `${targetX}px`; 
+            ball.style.top = `${targetY}px`; 
+            ball.classList.remove('ball-jumping'); 
+            void ball.offsetWidth; 
+            ball.style.animationDuration = `${intervalMs/1000}s`; 
+            ball.classList.add('ball-jumping'); 
+            
+            playRhythmSound(); 
+            targets.forEach(t => t.classList.remove('rhythm-hit')); 
+            target.classList.add('rhythm-hit'); 
+            
+            rhythmIndex++; 
+            rhythmTimer = setTimeout(rhythmLoop, intervalMs); 
+        }
+
+        function triggerActionBreak() { 
+            clearTimeout(rhythmTimer); 
+            const overlay = document.getElementById('action-overlay'); 
+            const iconEl = document.getElementById('action-icon'); 
+            const textEl = document.getElementById('action-text'); 
+            const actions = [{ i: '👏', t: '拍拍手' }, { i: '🦶', t: '跺跺脚' }, { i: '🙋', t: '举起手' }, { i: '💃', t: '扭扭腰' }, { i: '🤫', t: '嘘~安静' }, { i: '🐸', t: '跳一跳' }]; 
+            const act = actions[Math.floor(Math.random() * actions.length)]; 
+            iconEl.textContent = act.i; textEl.textContent = act.t; 
+            
+            overlay.classList.add('active'); // Use class to show
+            
+            setTimeout(() => { 
+                if(!isRunning) { 
+                    overlay.classList.remove('active'); 
+                    return; 
+                } 
+                overlay.classList.remove('active'); 
+                rhythmLoop(); 
+            }, 3000); 
+        }
+
+        function stopRhythmGame() { 
+            isRunning = false; clearTimeout(rhythmTimer); 
+            document.getElementById('rhythm-ball').style.display = 'none'; 
+            const overlay = document.getElementById('action-overlay'); 
+            overlay.classList.remove('active'); 
+            document.querySelectorAll('.rhythm-hit').forEach(t => t.classList.remove('rhythm-hit')); 
+            const btn = document.getElementById('btn-go'); 
+            if(btn) { btn.innerHTML = '<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } 
+        }
+
         function toggleActionBreak() { actionBreakEnabled = !actionBreakEnabled; const btn = document.getElementById('btn-action-break'); if(actionBreakEnabled) { btn.classList.replace('bg-gray-400', 'bg-green-500'); btn.innerHTML = '<i class="fa-solid fa-person-running mr-1"></i> 动感: 开'; } else { btn.classList.replace('bg-green-500', 'bg-gray-400'); btn.innerHTML = '<i class="fa-solid fa-bed mr-1"></i> 动感: 关'; } }
         function toggleRhythmSound() { rhythmSoundType = (rhythmSoundType + 1) % 4; const btn = document.getElementById('btn-rhythm-sound'); const icons = ['fa-music', 'fa-drum', 'fa-hand-sparkles', 'fa-bell']; btn.innerHTML = `<i class="fa-solid ${icons[rhythmSoundType]}"></i>`; playRhythmSound(); }
         function playRhythmSound() { if(!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); const now = audioCtx.currentTime; switch(rhythmSoundType) { case 0: osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1); osc.start(now); osc.stop(now + 0.1); break; case 1: osc.type = 'sine'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.5); gain.gain.setValueAtTime(1.0, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5); osc.start(now); osc.stop(now + 0.5); break; case 2: osc.type = 'triangle'; osc.frequency.setValueAtTime(2000, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05); osc.start(now); osc.stop(now + 0.05); break; case 3: osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5); osc.start(now); osc.stop(now + 1.5); break; } }
         function togglePinyin(){ pinyinVisible=!pinyinVisible; document.querySelectorAll('.pinyin').forEach(el=>{ if(el.innerText) el.style.visibility=pinyinVisible?'visible':'hidden'; }); }
         function toggleRecord() { const btn = document.getElementById('btn-record'); if(!isRecording) { try { navigator.mediaDevices.getUserMedia({audio:true}).then(s => { mediaRecorder=new MediaRecorder(s); audioChunks=[]; mediaRecorder.ondataavailable=e=>audioChunks.push(e.data); mediaRecorder.onstop=()=>{const b=new Blob(audioChunks,{type:'audio/wav'}); document.getElementById('audio-player').src=URL.createObjectURL(b); document.getElementById('audio-container').classList.remove('hidden');}; mediaRecorder.start(); isRecording=true; btn.classList.add('bg-red-500','text-white','animate-pulse'); btn.innerHTML='<i class="fa-solid fa-stop"></i>'; }); } catch(e){alert("请允许麦克风权限");} } else { mediaRecorder.stop(); isRecording=false; btn.classList.remove('bg-red-500','text-white','animate-pulse'); btn.innerHTML='<i class="fa-solid fa-microphone"></i>'; } }
         async function aiGenerateStory() { document.getElementById('ai-dialog').showModal(); }
+        // NEW: Fixed undefined updateRhythmSpeed error by defining it globally
+        function updateRhythmSpeed(val) { rhythmBPM = parseInt(val); }
         async function confirmGenerateStory() { const t = document.getElementById('ai-topic-input').value.trim(); if(!t)return; document.getElementById('ai-dialog').close(); document.getElementById('ai-loader').classList.remove('hidden'); try { const res = await fetch(GEMINI_API_URL, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:`请写一段关于"${t}"的4句儿童押韵诗，简单有趣，直接输出内容。`}]}]})}); const d = await res.json(); document.getElementById('text-input').value = d.candidates[0].content.parts[0].text.trim(); } catch(e){alert("魔法失效了，请重试！");} document.getElementById('ai-loader').classList.add('hidden'); }
     </script>
 </body>
