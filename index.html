@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>趣味魔法阅读 Reading is FUN</title>
+    <title>趣味魔法阅读 - Reading is FUN</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Pinyin Pro -->
@@ -124,24 +124,14 @@
         .cloud-char.spotlight-active .cloud-text{color:#d97706;text-shadow:0 0 2px #fff;font-weight:bold}.cloud-char.spotlight-done{opacity:0;transform:scale(0) rotate(180deg);pointer-events:none;transition:all .6s ease-out}
         .rhythm-ball{position:absolute;width:24px;height:24px;background:#ef4444;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,.3);z-index:100;pointer-events:none;display:none;transition:left linear}
         .ball-jumping{animation-name:ball-jump-arc;animation-timing-function:cubic-bezier(.45,.05,.55,.95);animation-iteration-count:1}.hanzi.rhythm-hit{color:#d97706!important;text-shadow:0 0 5px #fcd34d;transform:scale(1.1)}
-        
-        /* 🤸 动感课间遮罩 (FIXED: position fixed to viewport) */
-        #action-overlay {
-            position: fixed; /* 关键修改：固定定位 */
-            inset: 0;
-            background: rgba(255, 255, 255, 0.98);
-            display: none; 
-            flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; /* 最高层级 */
-        }
-        #action-overlay.active {
-            display: flex !important;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        #action-overlay{position:absolute;inset:0;background:rgba(255,255,255,.95);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200}
+        #action-overlay.active{display:flex!important;animation:popIn .3s cubic-bezier(.175,.885,.32,1.275)}
+        .emoji-item{cursor:pointer;transition:transform .2s;font-family:"Segoe UI Emoji",sans-serif}.emoji-item:hover{transform:scale(1.2) rotate(10deg)}
+        @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+        @keyframes ball-jump-arc{0%{transform:translateY(0) scaleX(1.1) scaleY(.9)}10%{transform:translateY(0) scaleX(1) scaleY(1)}50%{transform:translateY(-35px)}90%{transform:translateY(0) scaleX(1) scaleY(1)}100%{transform:translateY(0) scaleX(1.1) scaleY(.9)}}
         @keyframes popIn{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
         @keyframes pulse-glow { 0% { transform: scale(1.2); filter: drop-shadow(0 0 10px #facc15) drop-shadow(0 0 20px #fbbf24); } 100% { transform: scale(1.35); filter: drop-shadow(0 0 25px #facc15) drop-shadow(0 0 50px #f59e0b); } }
-        @keyframes ball-jump-arc{0%{transform:translateY(0) scaleX(1.1) scaleY(.9)}10%{transform:translateY(0) scaleX(1) scaleY(1)}50%{transform:translateY(-35px)}90%{transform:translateY(0) scaleX(1) scaleY(1)}100%{transform:translateY(0) scaleX(1.1) scaleY(.9)}}
         .action-icon{font-size:8rem;margin-bottom:2rem;animation:bounce 1s infinite}.action-text{font-size:4rem;font-family:'ZCOOL KuaiLe',cursive;color:#ea580c;text-shadow:2px 2px 0 #fff}
     </style>
 </head>
@@ -222,9 +212,9 @@
 
                 <div class="flex items-center gap-2">
                     <button onclick="showHelp()" class="btn-cartoon bg-teal-100 text-teal-600 px-3 py-2 rounded-xl font-bold text-lg" title="玩法说明"><i class="fa-solid fa-circle-question"></i></button>
-                    <button id="btn-download" onclick="downloadWorksheet()" class="hidden btn-cartoon bg-rose-100 text-rose-600 px-3 py-2 rounded-xl font-bold text-lg" title="保存图片"><i class="fa-solid fa-image"></i></button>
-                    <button id="btn-word" onclick="downloadAsWord()" class="hidden btn-cartoon bg-sky-100 text-sky-600 px-3 py-2 rounded-xl font-bold text-lg" title="下载 Word"><i class="fa-solid fa-file-word"></i></button>
-                    <button id="btn-print" onclick="window.print()" class="hidden btn-cartoon bg-cyan-100 text-cyan-600 px-3 py-2 rounded-xl font-bold text-lg" title="打印"><i class="fa-solid fa-print"></i></button>
+                    <!-- <button id="btn-download" onclick="downloadWorksheet()" class="hidden btn-cartoon bg-rose-100 text-rose-600 px-3 py-2 rounded-xl font-bold text-lg" title="保存图片"><i class="fa-solid fa-image"></i></button> -->
+                    <!-- <button id="btn-word" onclick="downloadAsWord()" class="hidden btn-cartoon bg-sky-100 text-sky-600 px-3 py-2 rounded-xl font-bold text-lg" title="下载 Word"><i class="fa-solid fa-file-word"></i></button> -->
+                    <!-- <button id="btn-print" onclick="window.print()" class="hidden btn-cartoon bg-cyan-100 text-cyan-600 px-3 py-2 rounded-xl font-bold text-lg" title="打印"><i class="fa-solid fa-print"></i></button> -->
                     <button onclick="togglePinyin()" id="btn-pinyin" class="hidden btn-cartoon bg-indigo-100 text-indigo-600 px-3 py-2 rounded-xl font-bold text-sm">拼音</button>
                     <button onclick="toggleRecord()" id="btn-record" class="btn-cartoon bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-3 py-2 rounded-xl font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-microphone"></i></button>
                     <button id="btn-go" onclick="handleGoAction()" class="hidden btn-cartoon bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-xl text-xl font-bold cartoon-font shadow-lg flex items-center gap-2"><i class="fa-solid fa-play"></i> 开始</button>
@@ -238,13 +228,12 @@
             <div id="game-container-wrapper" class="relative bg-white border border-gray-300 rounded-b-xl min-h-[450px] shadow-inner overflow-hidden">
                 <div id="game-board" class="w-full h-full min-h-[450px] relative"></div>
                 <div id="rhythm-ball" class="rhythm-ball"></div>
+                <!-- Action Overlay (Fixed: Fixed position to viewport) -->
+                <div id="action-overlay" class="hidden fixed inset-0 bg-white/95 z-[9999] flex-col items-center justify-center pointer-events-none">
+                    <div id="action-icon" class="text-8xl mb-4 animate-bounce">👏</div>
+                    <div id="action-text" class="text-5xl font-bold text-orange-500 cartoon-font">拍拍手</div>
+                </div>
                 <div id="rain-target-bar" class="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 target-panel flex flex-col items-center justify-center py-2 px-6 transition-all duration-300"><div class="text-xs text-indigo-200 uppercase tracking-wider font-bold">请点击:</div><div id="target-pinyin" class="text-3xl font-bold font-mono tracking-widest text-yellow-300">huā</div></div>
-            </div>
-            
-            <!-- FIXED: Moved Action Overlay OUT of wrapper to ensure fixed positioning works and it's not clipped -->
-            <div id="action-overlay" class="hidden fixed inset-0 bg-white/95 z-[9999] flex flex-col items-center justify-center">
-                <div id="action-icon" class="text-8xl mb-4 animate-bounce">👏</div>
-                <div id="action-text" class="text-5xl font-bold text-orange-500 cartoon-font">拍拍手</div>
             </div>
         </section>
     </main>
@@ -526,7 +515,10 @@
             if(isRunning){ clearTimeout(vanishingTimer); isRunning=false; btn.innerHTML='<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500','bg-green-500'); document.querySelectorAll('.target-char').forEach(el=>el.classList.remove('vanished')); return; }
             isRunning=true; btn.innerHTML='<i class="fa-solid fa-stop"></i> 停止'; btn.classList.replace('bg-green-500','bg-red-500');
             let idx = 0; const targets = document.querySelectorAll('.target-char');
-            function nextFade() { if(!isRunning) return; if(idx >= targets.length) { clearTimeout(vanishingTimer); isRunning=false; btn.innerHTML='<i class="fa-solid fa-rotate-left"></i> 重来'; btn.classList.replace('bg-red-500','bg-yellow-500'); return; } const v = parseInt(document.getElementById('global-speed-slider').value); const currentDelay = 2400 - (v * 200); targets[idx].style.transitionDuration = `${currentDelay/1000}s`; targets[idx].classList.add('vanished'); idx++; vanishingTimer = setTimeout(nextFade, currentDelay); } nextFade();
+            function nextFade() { if(!isRunning) return; if(idx >= targets.length) { clearTimeout(vanishingTimer); isRunning=false; btn.innerHTML='<i class="fa-solid fa-rotate-left"></i> 重来'; btn.classList.replace('bg-red-500','bg-yellow-500'); return; } const v = parseInt(document.getElementById('global-speed-slider').value); const currentDelay = 2400 - (v * 200); 
+            // AUTO SCROLL
+            targets[idx].scrollIntoView({behavior: 'smooth', block: 'center'});
+            targets[idx].style.transitionDuration = `${currentDelay/1000}s`; targets[idx].classList.add('vanished'); idx++; vanishingTimer = setTimeout(nextFade, currentDelay); } nextFade();
         }
 
         // --- Emoji Mode ---
@@ -579,115 +571,22 @@
 
         // --- Spotlight ---
         function renderSpotlightSetup(text) { const board = document.getElementById('game-board'); board.innerHTML = ''; board.className = 'w-full h-full min-h-[450px] spotlight-container flex flex-wrap justify-center content-center gap-6 p-8'; const rawChars = text.replace(/[^\u4e00-\u9fa5]/g, '').split(''); const charCounts = {}; const cleanChars = []; rawChars.forEach(char => { charCounts[char] = (charCounts[char] || 0) + 1; if (charCounts[char] <= 2) cleanChars.push(char); }); if(cleanChars.length === 0) { alert("没有汉字哦"); return; } cleanChars.slice(0, 24).forEach((char, idx) => { const cloud = document.createElement('div'); cloud.className = 'cloud-char'; const span = document.createElement('span'); span.className = 'cloud-text'; span.textContent = char; cloud.appendChild(span); cloud.dataset.id = idx; cloud.style.animationDelay = (Math.random() * 5) + 's'; cloud.onclick = () => handleSpotlightClick(cloud); board.appendChild(cloud); }); setTimeout(nextSpotlightTarget, 1000); }
-        function nextSpotlightTarget() { const items = document.querySelectorAll('.cloud-char:not(.spotlight-done)'); if (currentSpotlightTarget) currentSpotlightTarget.classList.remove('spotlight-active'); if (items.length === 0) return; const rand = items[Math.floor(Math.random() * items.length)]; rand.classList.add('spotlight-active'); currentSpotlightTarget = rand; }
+        function nextSpotlightTarget() { const items = document.querySelectorAll('.cloud-char:not(.spotlight-done)'); if (currentSpotlightTarget) currentSpotlightTarget.classList.remove('spotlight-active'); if (items.length === 0) return; const rand = items[Math.floor(Math.random() * items.length)]; rand.classList.add('spotlight-active'); currentSpotlightTarget = rand; 
+        // Auto Scroll
+        rand.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
         function handleSpotlightClick(el) { if (el === currentSpotlightTarget) { el.classList.remove('spotlight-active'); el.classList.add('spotlight-done'); setTimeout(nextSpotlightTarget, 500); } }
 
         // --- Rhythm ---
-        function renderRhythmSetup(text) { 
-            const board = document.getElementById('game-board'); board.innerHTML = ''; 
-            board.className = 'notebook-paper p-6 flex flex-wrap justify-center content-start gap-y-4 w-full h-full'; 
-            const { pinyin } = pinyinPro; 
-            const lines = text.split('\n'); 
-            lines.forEach((line, lineIdx) => { 
-                const div = document.createElement('div'); 
-                div.className = 'w-full text-center mb-10 leading-none flex flex-wrap justify-center rhythm-line'; 
-                line.split('').forEach(char => { 
-                    const py = /[\u4e00-\u9fa5]/.test(char) ? pinyin(char) : ''; 
-                    const unit = document.createElement('div'); unit.className = 'char-unit rhythm-target'; 
-                    unit.dataset.line = lineIdx; 
-                    unit.innerHTML = `<div class="pinyin" style="visibility:${pinyinVisible?'visible':'hidden'}">${py}</div><div class="hanzi game-font">${char}</div>`; 
-                    div.appendChild(unit); 
-                }); 
-                board.appendChild(div); 
-            }); 
-            document.getElementById('rhythm-ball').style.display = 'none'; 
-        }
-
+        function renderRhythmSetup(text) { const board = document.getElementById('game-board'); board.innerHTML = ''; board.className = 'notebook-paper p-6 flex flex-wrap justify-center content-start gap-y-4 w-full h-full'; const { pinyin } = pinyinPro; const lines = text.split('\n'); lines.forEach((line, lineIdx) => { const div = document.createElement('div'); div.className = 'w-full text-center mb-10 leading-none flex flex-wrap justify-center rhythm-line'; line.split('').forEach(char => { const py = /[\u4e00-\u9fa5]/.test(char) ? pinyin(char) : ''; const unit = document.createElement('div'); unit.className = 'char-unit rhythm-target'; unit.dataset.line = lineIdx; unit.innerHTML = `<div class="pinyin" style="visibility:${pinyinVisible?'visible':'hidden'}">${py}</div><div class="hanzi game-font">${char}</div>`; div.appendChild(unit); }); board.appendChild(div); }); document.getElementById('rhythm-ball').style.display = 'none'; }
         function toggleRhythmGame() { const btn = document.getElementById('btn-go'); if(isRunning) { stopRhythmGame(); btn.innerHTML='<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } else { startRhythmGame(); btn.innerHTML='<i class="fa-solid fa-stop"></i> 停止'; btn.classList.replace('bg-green-500', 'bg-red-500'); } }
-        
-        function startRhythmGame() { 
-            isRunning = true; rhythmIndex = 0; rhythmCurrentLine = 0; 
-            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
-            if(audioCtx.state === 'suspended') audioCtx.resume(); 
-            const ball = document.getElementById('rhythm-ball'); ball.style.display = 'block'; 
-            const targets = document.querySelectorAll('.rhythm-target .hanzi'); 
-            if(targets.length === 0) return; 
-            rhythmLoop(); 
-        }
-
-        function rhythmLoop() { 
-            if(!isRunning) return; 
-            const targets = document.querySelectorAll('.rhythm-target .hanzi'); 
-            if(rhythmIndex >= targets.length) { stopRhythmGame(); return; } 
-            
-            const target = targets[rhythmIndex]; 
-            const parentUnit = target.parentElement; 
-            const targetLine = parseInt(parentUnit.dataset.line); 
-            
-            if(actionBreakEnabled && rhythmIndex > 0 && targetLine > rhythmCurrentLine) { 
-                rhythmCurrentLine = targetLine; 
-                triggerActionBreak(); 
-                return; 
-            } 
-            if (!actionBreakEnabled) rhythmCurrentLine = targetLine; 
-            
-            // --- SCROLL LOGIC ---
-            target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-            // --------------------
-
-            const rect = target.getBoundingClientRect(); 
-            const boardRect = document.getElementById('game-board').getBoundingClientRect(); 
-            const targetX = rect.left - boardRect.left + rect.width/2 - 12; 
-            const targetY = rect.top - boardRect.top - 60; 
-            const intervalMs = 60000 / rhythmBPM; 
-            
-            const ball = document.getElementById('rhythm-ball'); 
-            ball.style.left = `${targetX}px`; 
-            ball.style.top = `${targetY}px`; 
-            ball.classList.remove('ball-jumping'); 
-            void ball.offsetWidth; 
-            ball.style.animationDuration = `${intervalMs/1000}s`; 
-            ball.classList.add('ball-jumping'); 
-            
-            playRhythmSound(); 
-            targets.forEach(t => t.classList.remove('rhythm-hit')); 
-            target.classList.add('rhythm-hit'); 
-            
-            rhythmIndex++; 
-            rhythmTimer = setTimeout(rhythmLoop, intervalMs); 
-        }
-
-        function triggerActionBreak() { 
-            clearTimeout(rhythmTimer); 
-            const overlay = document.getElementById('action-overlay'); 
-            const iconEl = document.getElementById('action-icon'); 
-            const textEl = document.getElementById('action-text'); 
-            const actions = [{ i: '👏', t: '拍拍手' }, { i: '🦶', t: '跺跺脚' }, { i: '🙋', t: '举起手' }, { i: '💃', t: '扭扭腰' }, { i: '🤫', t: '嘘~安静' }, { i: '🐸', t: '跳一跳' }]; 
-            const act = actions[Math.floor(Math.random() * actions.length)]; 
-            iconEl.textContent = act.i; textEl.textContent = act.t; 
-            
-            overlay.classList.add('active'); // Use class to show
-            
-            setTimeout(() => { 
-                if(!isRunning) { 
-                    overlay.classList.remove('active'); 
-                    return; 
-                } 
-                overlay.classList.remove('active'); 
-                rhythmLoop(); 
-            }, 3000); 
-        }
-
-        function stopRhythmGame() { 
-            isRunning = false; clearTimeout(rhythmTimer); 
-            document.getElementById('rhythm-ball').style.display = 'none'; 
-            const overlay = document.getElementById('action-overlay'); 
-            overlay.classList.remove('active'); 
-            document.querySelectorAll('.rhythm-hit').forEach(t => t.classList.remove('rhythm-hit')); 
-            const btn = document.getElementById('btn-go'); 
-            if(btn) { btn.innerHTML = '<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } 
-        }
-
+        function startRhythmGame() { isRunning = true; rhythmIndex = 0; rhythmCurrentLine = 0; if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if(audioCtx.state === 'suspended') audioCtx.resume(); const ball = document.getElementById('rhythm-ball'); ball.style.display = 'block'; const targets = document.querySelectorAll('.rhythm-target .hanzi'); if(targets.length === 0) return; rhythmLoop(); }
+        function rhythmLoop() { if(!isRunning) return; const targets = document.querySelectorAll('.rhythm-target .hanzi'); if(rhythmIndex >= targets.length) { stopRhythmGame(); return; } const target = targets[rhythmIndex]; const parentUnit = target.parentElement; const targetLine = parseInt(parentUnit.dataset.line); if(actionBreakEnabled && rhythmIndex > 0 && targetLine > rhythmCurrentLine) { rhythmCurrentLine = targetLine; triggerActionBreak(); return; } if (!actionBreakEnabled) rhythmCurrentLine = targetLine; const rect = target.getBoundingClientRect(); const boardRect = document.getElementById('game-board').getBoundingClientRect(); const targetX = rect.left - boardRect.left + rect.width/2 - 12; const targetY = rect.top - boardRect.top - 60; const intervalMs = 60000 / rhythmBPM; const ball = document.getElementById('rhythm-ball'); ball.style.left = `${targetX}px`; ball.style.top = `${targetY}px`; ball.classList.remove('ball-jumping'); void ball.offsetWidth; ball.style.animationDuration = `${intervalMs/1000}s`; ball.classList.add('ball-jumping'); 
+        // Auto Scroll
+        target.scrollIntoView({behavior: 'smooth', block: 'center'});
+        playRhythmSound(); targets.forEach(t => t.classList.remove('rhythm-hit')); target.classList.add('rhythm-hit'); rhythmIndex++; rhythmTimer = setTimeout(rhythmLoop, intervalMs); }
+        function triggerActionBreak() { clearTimeout(rhythmTimer); const overlay = document.getElementById('action-overlay'); const iconEl = document.getElementById('action-icon'); const textEl = document.getElementById('action-text'); const actions = [{ i: '👏', t: '拍拍手' }, { i: '🦶', t: '跺跺脚' }, { i: '🙋', t: '举起手' }, { i: '💃', t: '扭扭腰' }, { i: '🤫', t: '嘘~安静' }, { i: '🐸', t: '跳一跳' }]; const act = actions[Math.floor(Math.random() * actions.length)]; iconEl.textContent = act.i; textEl.textContent = act.t; overlay.classList.add('active'); setTimeout(() => { if(!isRunning) { overlay.classList.remove('active'); return; } overlay.classList.remove('active'); rhythmLoop(); }, 3000); }
+        function stopRhythmGame() { isRunning = false; clearTimeout(rhythmTimer); document.getElementById('rhythm-ball').style.display = 'none'; const overlay = document.getElementById('action-overlay'); overlay.classList.remove('active'); document.querySelectorAll('.rhythm-hit').forEach(t => t.classList.remove('rhythm-hit')); const btn = document.getElementById('btn-go'); if(btn) { btn.innerHTML = '<i class="fa-solid fa-play"></i> 开始'; btn.classList.replace('bg-red-500', 'bg-green-500'); } }
         function toggleActionBreak() { actionBreakEnabled = !actionBreakEnabled; const btn = document.getElementById('btn-action-break'); if(actionBreakEnabled) { btn.classList.replace('bg-gray-400', 'bg-green-500'); btn.innerHTML = '<i class="fa-solid fa-person-running mr-1"></i> 动感: 开'; } else { btn.classList.replace('bg-green-500', 'bg-gray-400'); btn.innerHTML = '<i class="fa-solid fa-bed mr-1"></i> 动感: 关'; } }
         function toggleRhythmSound() { rhythmSoundType = (rhythmSoundType + 1) % 4; const btn = document.getElementById('btn-rhythm-sound'); const icons = ['fa-music', 'fa-drum', 'fa-hand-sparkles', 'fa-bell']; btn.innerHTML = `<i class="fa-solid ${icons[rhythmSoundType]}"></i>`; playRhythmSound(); }
         function playRhythmSound() { if(!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); const now = audioCtx.currentTime; switch(rhythmSoundType) { case 0: osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1); osc.start(now); osc.stop(now + 0.1); break; case 1: osc.type = 'sine'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.5); gain.gain.setValueAtTime(1.0, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5); osc.start(now); osc.stop(now + 0.5); break; case 2: osc.type = 'triangle'; osc.frequency.setValueAtTime(2000, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05); osc.start(now); osc.stop(now + 0.05); break; case 3: osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5); osc.start(now); osc.stop(now + 1.5); break; } }
